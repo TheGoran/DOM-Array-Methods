@@ -6,9 +6,9 @@ Use fetch and async await.
 const main = document.getElementById('main');
 const addUser = document.getElementById('add-user');
 const double = document.getElementById('double');
-const showMillionaires = document.getElementById('show-millionaires');
+const showMillionairesBtn = document.getElementById('show-millionaires');
 const sort = document.getElementById('sort');
-const calculateWealth = document.getElementById('calculate-wealth');
+const calculateWealthBtn = document.getElementById('calculate-wealth');
 
 /* Initializing an array  where we  going to put all of the people.
 Array of objects, containing the Names, and the money values.
@@ -34,9 +34,42 @@ async function getRandomUser() {
     name: `${user.name.first} ${user.name.last}`, //Using back ticks for template literals.
     money: Math.floor(Math.random() * 1000000), //Generate random number up to a million
   };
+
   addData(newUser);
 }
 
+// Double everyones money.
+function doubleMoney() {
+  data = data.map((user) => {
+    return { ...user, money: user.money * 2 };
+  });
+
+  updateDom();
+}
+
+// Sort users by richest.
+function sortByRichest() {
+  data.sort((a, b) => b.money - a.money);
+
+  updateDom();
+}
+
+// Filter only Millionaires
+function showMillionaires() {
+  data = data.filter((user) => user.money > 1000000);
+  updateDom();
+}
+// Calculate total wealth
+function calculateWealth() {
+  const wealth = data.reduce((acc, user) => (acc += user.money), 0);
+
+  const wealthElement = document.createElement('div');
+  wealthElement.innerHTML = `<h3>Total Wealth: <strong>${formatMoney(
+    wealth
+  )}</strong></h3>`;
+
+  main.appendChild(wealthElement);
+}
 // Add new object to data array.
 
 function addData(obj) {
@@ -69,3 +102,7 @@ function formatMoney(number) {
 // Event Listeners
 
 addUser.addEventListener('click', getRandomUser); // Create user.
+double.addEventListener('click', doubleMoney); //Double the money.
+sort.addEventListener('click', sortByRichest); //Sort users by richest.
+showMillionairesBtn.addEventListener('click', showMillionaires); // Show  Millionaires.
+calculateWealthBtn.addEventListener('click', calculateWealth); // Sum up all the money.
